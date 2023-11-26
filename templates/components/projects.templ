@@ -1,0 +1,19 @@
+package components
+
+import "fmt"
+
+templ ProjectControl(projectSlug string) {
+    <header>
+        <div class="tab-list grid" role="tablist">
+            <button role="tab" class="outline" aria-selected="true" aria-controls="tab-content">Control</button>
+            <button role="tab" aria-selected="false" aria-controls="tab-content">Logs</button>
+            <button role="tab" aria-selected="false" aria-controls="tab-content">Envs</button>
+        </div>
+    </header>
+    <div id="tab-content" role="tabpanel" class="tab-content">
+        <div>
+            <button role="button" class="secondary" _="on click set @aria-busy to true" hx-post={fmt.Sprintf("/projects/%s/control/start", projectSlug)} hx-target="#status" hx-swap="innerHtml">Start</button>
+        </div>
+        <div id="status"></div>
+    </div>
+}

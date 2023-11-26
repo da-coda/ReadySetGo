@@ -1,0 +1,21 @@
+package pages
+
+import (
+	"ReadySetGo/services"
+	"fmt"
+)
+
+templ Project(config services.ProjectConfig, err error) {
+  @page("Project", map[string]string{"/": "Home"}) {
+    if err != nil {
+        <span area-invalid="true">{err.Error()}</span>
+    } else {
+        <h3>{config.GetName()}</h3>
+        <article>
+            <div hx-get={fmt.Sprintf("/projects/%s/control", config.GetSlug())} hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="outerHTML">
+            </div>
+            <div id="tabs"></div>
+        </article>
+    }
+  }
+}

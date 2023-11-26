@@ -1,0 +1,30 @@
+package pages
+
+templ page (title string, nav map[string]string) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>{ title }</title>
+    <script src="/assets/js/htmx.min.js"></script>
+    <script src="/assets/js/hyperscript.min.js"></script>
+    <link rel="stylesheet" href="/assets/css/customize.css"/>
+    <link rel="stylesheet" href="/assets/css/pico.min.css"/>
+</head>
+<body class="container-fluid">
+    <nav>
+      <ul>
+        <li><strong>ReadySetGo</strong></li>
+      </ul>
+      <ul>
+      for path, label := range nav{
+        <li><a href={templ.URL(path)} role="button">{label}</a></li>
+      }
+      </ul>
+    </nav>
+    <div class="container">
+        { children... }
+    </div>
+</body>
+</html>
+}
