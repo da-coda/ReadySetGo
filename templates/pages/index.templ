@@ -1,8 +1,26 @@
 package pages
 
+import 	(
+    "ReadySetGo/services"
+    "fmt"
+)
 
-templ Index() {
+
+
+templ Index(projects []services.ProjectConfig) {
   @page("ReadySetGo", map[string]string{"/create": "Create New"}) {
-    <h1>Hello</h1>
+    <h1>Your Projects</h1>
+    <div class="row">
+        for _, project := range projects {
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <article>
+                <header>
+                    <h3>{project.GetName()}</h3>
+                </header>
+            <a role="button" href={templ.URL(fmt.Sprintf("/projects/%s", project.GetSlug()))}>Manage</a>
+            </article>
+        </div>
+        }
+    </div>
   }
 }

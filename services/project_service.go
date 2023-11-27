@@ -5,15 +5,18 @@ import (
 	"fmt"
 	"github.com/BurntSushi/toml"
 	"io"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 type ProjectService interface {
 	CreateNewProject(originalFile io.Reader, name string) (string, error)
 	LoadProject(projectSlug string) (ProjectConfig, error)
+	GetProjects() ([]ProjectConfig, error)
 }
 
 type projectService struct {
@@ -75,6 +78,32 @@ func (s projectService) LoadProject(projectSlug string) (ProjectConfig, error) {
 		return nil, fmt.Errorf("could not find project directory")
 	}
 	return loadConfig(dirPath)
+}
+
+func (s projectService) GetProjects() ([]ProjectConfig, error) {
+	var projects []ProjectConfig
+	dirEntries, err := os.ReadDir(s.binBaseDir)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read bin directory: %w", err)
+	}
+	mu := &sync.Mutex{}
+	wg := sync.WaitGroup{}
+	for _, entry := range dirEntries {
+		wg.Add(1)
+		go func(dirEntry os.DirEntry) {
+			defer wg.Done()
+			config, err := loadConfig(fmt.Sprintf("%s/%s", s.binBaseDir, dirEntry.Name()))
+			if err != nil {
+				slog.Error(fmt.Errorf("unable to load config for project %s: %w", dirEntry.Name(), err).Error())
+				return
+			}
+			mu.Lock()
+			projects = append(projects, config)
+			mu.Unlock()
+		}(entry)
+	}
+	wg.Wait()
+	return projects, nil
 }
 
 type ProjectConfig interface {

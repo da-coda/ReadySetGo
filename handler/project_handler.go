@@ -22,6 +22,16 @@ func CreateProjectGetHandler(service services.ProjectService) http.HandlerFunc {
 	}
 }
 
+func CreateProjectsIndexHandler(service services.ProjectService) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		projects, err := service.GetProjects()
+		if err != nil {
+			panic(err.Error())
+		}
+		templ.Handler(pages.Index(projects)).ServeHTTP(w, r)
+	}
+}
+
 func CreateProjectGetControlTabHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		projectSlug := chi.URLParam(r, "projectSlug")

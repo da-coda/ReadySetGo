@@ -10,6 +10,7 @@ templ page (title string, nav map[string]string) {
     <script src="/assets/js/hyperscript.min.js"></script>
     <link rel="stylesheet" href="/assets/css/customize.css"/>
     <link rel="stylesheet" href="/assets/css/pico.min.css"/>
+    <link rel="stylesheet" href="/assets/css/pico-bootstrap-grid.min.css"/>
 </head>
 <body class="container-fluid">
     <nav>
@@ -22,9 +23,7 @@ templ page (title string, nav map[string]string) {
       }
       </ul>
     </nav>
-    <div class="container">
         { children... }
-    </div>
 </body>
 </html>
 }

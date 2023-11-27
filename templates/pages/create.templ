@@ -2,6 +2,7 @@ package pages
 
 templ CreateNew() {
   @page("Create New", map[string]string{"/": "Home"}) {
+      <div class="container">
   <article>
       <h1>Create New</h1>
         <form hx-encoding='multipart/form-data' hx-target='next div' hx-post='/create'
@@ -21,5 +22,6 @@ templ CreateNew() {
         </form>
         <div></div>
   </article>
+  </div>
   }
 }

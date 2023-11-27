@@ -38,7 +38,7 @@ func main() {
 	r.Use(middleware.Heartbeat("/ping"))
 	r.Use(middleware.Timeout(60 * time.Second))
 
-	r.Get("/", templ.Handler(pages.Index()).ServeHTTP)
+	r.Get("/", handler.CreateProjectsIndexHandler(projectService))
 	r.Route("/create", func(r chi.Router) {
 		r.Get("/", templ.Handler(pages.CreateNew()).ServeHTTP)
 		r.Post("/", handler.CreateUploadHandler(projectService))
